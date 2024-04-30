@@ -17,4 +17,49 @@ router.post("/add",async(req,res)=>{
     }
 })
 
+router.get("/getBooks",async (req,res)=>{
+    try {
+        const books=await bookModel.find();
+        res.status(200).json({books});
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.get("/getBook/:id",async (req,res)=>{
+    const id=req.params.id;
+    try {
+        const book=await bookModel.findById(id);
+        res.status(200).json({book});
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.post("/updateBook/:id",async(req,res)=>{
+    let id=req.params.id
+    try {
+        const data=req.body;
+        console.log(data)
+        let book=await bookModel.findByIdAndUpdate(id,data);
+        if(book){
+            res.status(200).json({msg:"book updated successfully"})
+        }
+        
+    } catch (error) {
+        console.log("Error -> ",error)
+    }
+})
+
+router.delete("/deleteBook/:id",async(req,res)=>{
+    let id=req.params.id;
+    try {
+        await bookModel.findByIdAndDelete(id)
+        .then(()=>res.status(200).json({msg:"Book deleted successfully"}))
+    } catch (error) {
+        console.log("Error",err)
+    }
+})
+
+
 module.exports=router
